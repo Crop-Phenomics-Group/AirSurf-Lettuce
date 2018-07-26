@@ -57,7 +57,7 @@ def create_for_contours(file_name, field, boxes, labels, size_labels, RGB_tuples
     for (x1, y1, x2, y2), label in list(zip(boxes, labels)):
         # use the label to index into the size ordering, to index into the colors.
         set_color(output_field, circle(abs(x2 + x1) / 2.0, abs(y2 + y1) / 2.0, radius=(abs(y2 - y1) + 1.0) /2.0), RGB_tuples[size_labels[label]])
-    imsave(file_name + "_for_contour.png", output_field)
+    #imsave(file_name + "_for_contour.png", output_field)
     return output_field
 
 def create_staged_labels(file_name, field, boxes,labels, size_labels, count_elements,unique_elements, RGB_tuples=None):
@@ -79,7 +79,7 @@ def create_staged_labels(file_name, field, boxes,labels, size_labels, count_elem
         # plt.imshow(output_field)
         # plt.show()
 
-        imsave(file_name + "_output_progress" + str(i) + ".png", output_field)
+        #imsave(file_name + "_output_progress" + str(i) + ".png", output_field)
 
 
 def main():

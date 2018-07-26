@@ -92,10 +92,11 @@ def create_quadrant_image(file_name, img):
 
     output_img = np.array(output_img)
 
-    imsave(file_name + "_overview.png", resize(output_img, (output_img.shape[0]*10, output_img.shape[1]*10)))
-    plt.axis("off")
-    plt.imshow(output_img)
-    plt.show()
+    return output_img
+    #imsave(file_name + "_overview.png", resize(output_img, (output_img.shape[0]*10, output_img.shape[1]*10)))
+    #plt.axis("off")
+    #plt.imshow(output_img)
+    #plt.show()
 
 
 def main():

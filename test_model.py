@@ -205,12 +205,7 @@ def non_max_suppression_fast(boxes, probabilities, overlapThresh):
 
 def draw_boxes(im, boxs, color=(1,0,0)):
     for (x1, y1, x2, y2) in boxs:
-        #literally don't understand??? doesn't draw a rectangle.
-        #set_color(im, line(x1, y1, x1, y2), (1, 0, 0))
-        #set_color(im, line(x1, y1, x2, y1), (1, 0, 0))
-        #set_color(im, line(x2, y2, x2, y1), (1, 0, 0))
-        #set_color(im, line(x1, y2, x2, y2), (1, 0, 0))
-        set_color(im.copy(), circle(abs((x2+x1))/2.0, abs(y2+y1)/2.0, radius=abs(y2-y1)/2.0), color)
+        set_color(im, circle(abs((x2+x1))/2.0, abs(y2+y1)/2.0, radius=(abs(y2 - y1) + 1.0) / 2.0), color)
     return im
 
 def draw_boxes_please(im, boxs, color=(1,0,0), width=0):
