@@ -1,8 +1,6 @@
 import tkinter
 from tkinter import Menu, Tk, Canvas, Entry, Button, filedialog, Label, Frame, ttk
 from PIL import ImageTk, Image
-from skimage import img_as_ubyte
-
 from skimage.io import imread, imsave, imshow, show
 from skimage.color import grey2rgb
 from skimage.transform import resize, rescale, pyramid_expand
@@ -26,11 +24,13 @@ class LettuceApp(Tk):
     def __init__(self):
         Tk.__init__(self)
 
-        self.geometry("400x400")
+        self.width = 1024
+        self.height = 768
+        self.geometry(str(self.width)+"x"+str(self.height))
         self.title("Lettuce App")
 
         self.input_frame = Frame(master=self)
-        self.input_frame.config(width=300, height=30)
+        self.input_frame.config(width=self.width, height=30)
 
         self.in_filename_label = Label(master=self.input_frame, text="Input:")
         self.in_filename_entry = Entry(master=self.input_frame, textvariable="Input FileName")
@@ -59,7 +59,7 @@ class LettuceApp(Tk):
             self.tabControl.add(tab, text=tab_name)
             self.tabs[tab_name] = tab
             self.canvas[tab_name] = Canvas(tab, highlightthickness=0, highlightbackground="black", bd=0, bg="light gray")
-            self.canvas[tab_name].config(width=300, height=300)
+            self.canvas[tab_name].config(width=self.width, height=self.height)
             self.canvas[tab_name].pack()
             self.photo[tab_name] = None
             self.photo_config[tab_name] = None
@@ -109,7 +109,7 @@ class LettuceApp(Tk):
         self.filename = self.in_filename_entry.get()
         if os.path.isfile(self.filename):
             #load the image as a photo
-            self.src_image = imread(self.filename).astype(np.ubyte)
+            self.src_image = imread(self.filename).astype(np.uint8)
             #ensure its a rgb image.
             print(self.src_image.shape)
             if len(self.src_image.shape) == 2:
@@ -120,8 +120,8 @@ class LettuceApp(Tk):
 
     def draw_image(self, img, tab_name="original"):
         self.src_image = img
-        im = resize(self.src_image, (300,300,3), preserve_range=True, mode="edge").astype(np.ubyte)
-        self.photo[tab_name] = ImageTk.PhotoImage(Image.fromarray(im))
+        #im = resize(self.src_image, (self.height,self.width,3), preserve_range=True, mode="edge").astype(np.uint8)
+        self.photo[tab_name] = ImageTk.PhotoImage(Image.fromarray(self.src_img).resize(self.width, self.height))
 
         # eitjer create an image on the canvas, or overwrite.
         if self.photo_config[tab_name] is None:
@@ -157,7 +157,7 @@ class LettuceApp(Tk):
 
             imsave(output_name, img1)
         else:
-            img1 = imread(output_name).astype(np.ubyte)[:,:,:3]
+            img1 = imread(output_name).astype(np.uint8)[:,:,:3]
 
         self.draw_image(img1, "converted")
         time.sleep(2)
@@ -192,8 +192,9 @@ class LettuceApp(Tk):
 
         # create quadrant harvest region image.
         output_field = create_quadrant_image(name, color_field)
-
-        im = output_field
+        im = Image.fromarray(output_field.astype(np.uint8), mode="RGB")
+        im = im.resize((self.width,self.height))
+        im = np.array(im.getdata(), np.uint8).reshape(self.height,self.width,3)
 
         imsave(dir1 + "/" + name + "/harvest_regions.png", im)
         self.draw_image(im, "regions")
