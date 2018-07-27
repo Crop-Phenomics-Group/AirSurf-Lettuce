@@ -54,6 +54,7 @@ class LettuceApp(Tk):
         self.canvas = {}
         self.photo = {}
         self.photo_config = {}
+        self.src_image = None
         for tab_name in self.tab_names:
             tab = ttk.Frame(self.tabControl)
             self.tabControl.add(tab, text=tab_name)
@@ -120,8 +121,7 @@ class LettuceApp(Tk):
 
     def draw_image(self, img, tab_name="original"):
         self.src_image = img
-        #im = resize(self.src_image, (self.height,self.width,3), preserve_range=True, mode="edge").astype(np.uint8)
-        self.photo[tab_name] = ImageTk.PhotoImage(Image.fromarray(self.src_img).resize(self.width, self.height))
+        self.photo[tab_name] = ImageTk.PhotoImage(Image.fromarray(img).resize((self.width, self.height)))
 
         # eitjer create an image on the canvas, or overwrite.
         if self.photo_config[tab_name] is None:
