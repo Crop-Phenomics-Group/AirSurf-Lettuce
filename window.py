@@ -16,6 +16,7 @@ from size_calculator import calculate_sizes, create_for_contours
 import matplotlib.pyplot as plt
 from threading import Thread
 import time
+from construct_quadrant_file import create_quadrant_file
 
 class LettuceApp(Tk):
 
@@ -24,10 +25,12 @@ class LettuceApp(Tk):
     def __init__(self):
         Tk.__init__(self)
 
-        self.width = 1024
-        self.height = 768
+        self.width = 1920
+        self.height = 960
+        self.img_width = 0
+        self.img_height =0
         self.geometry(str(self.width)+"x"+str(self.height))
-        self.title("Lettuce App")
+        self.title("AirSurf-Lettuce")
 
         self.input_frame = Frame(master=self)
         self.input_frame.config(width=self.width, height=30)
@@ -35,12 +38,12 @@ class LettuceApp(Tk):
         self.in_filename_label = Label(master=self.input_frame, text="Input:")
         self.in_filename_entry = Entry(master=self.input_frame, textvariable="Input FileName")
         self.in_filename_browse = Button(master=self.input_frame, text="...", width=3, command=self.open_image)
-        self.in_filename_submit = Button(master=self.input_frame, text="Submit", width=10, command=self.load_image)
+        #self.in_filename_submit = Button(master=self.input_frame, text="Submit", width=10, command=self.load_image)
         self.in_filename_start = Button(master=self.input_frame, text="Start", width=10, command=self.run_pipeline_threaded)
         self.in_filename_label.pack(side=tkinter.LEFT)
         self.in_filename_entry.pack(side=tkinter.LEFT)
         self.in_filename_browse.pack(side=tkinter.LEFT)
-        self.in_filename_submit.pack(side=tkinter.LEFT)
+        #self.in_filename_submit.pack(side=tkinter.LEFT)
         self.in_filename_start.pack(side=tkinter.LEFT)
 
         self.input_frame.pack()
@@ -48,7 +51,7 @@ class LettuceApp(Tk):
 
 
         #create tabs.
-        self.tab_names = ["original", "converted", "counts", "sizes", "regions"]
+        self.tab_names = ["original", "normalised", "counts", "size distribution", "harvest regions"]
         self.tabControl = ttk.Notebook(self)
         self.tabs = {}
         self.canvas = {}
@@ -103,23 +106,24 @@ class LettuceApp(Tk):
         filename = filedialog.askopenfilename(initialdir="./")
         self.in_filename_entry.delete(0, 'end')
         self.in_filename_entry.insert(0, filename)
-        print("opening " + filename)
-        #self.load_image(filename)
+        self.load_image()
 
     def load_image(self):
         self.filename = self.in_filename_entry.get()
         if os.path.isfile(self.filename):
             #load the image as a photo
             self.src_image = imread(self.filename).astype(np.uint8)
+            self.img_width = self.src_image.shape[1]
+            self.img_height = self.src_image.shape[0]
             #ensure its a rgb image.
             print(self.src_image.shape)
             if len(self.src_image.shape) == 2:
                 self.src_image = grey2rgb(self.src_image)
             else:
                 self.src_image = self.src_image[:,:,:3]
-            self.draw_image(self.src_image)
+            self.draw_image(self.src_image, self.tab_names[0])
 
-    def draw_image(self, img, tab_name="original"):
+    def draw_image(self, img, tab_name):
         self.src_image = img
         self.photo[tab_name] = ImageTk.PhotoImage(Image.fromarray(img).resize((self.width, self.height)))
 
@@ -142,9 +146,6 @@ class LettuceApp(Tk):
     def run_pipeline(self):
         dir1 = os.path.dirname(self.filename)
         name = os.path.splitext(os.path.basename(self.filename))[0]
-        # name = 'peacock_cropped'
-        # name = 'bottom_field_cropped'
-        # name = 'top_field_cropped'
         Image.MAX_IMAGE_PIXELS = None
         output_name = dir1 + "/" + name + "/grey_conversion.png"
         if not os.path.exists(output_name):
@@ -159,7 +160,7 @@ class LettuceApp(Tk):
         else:
             img1 = imread(output_name).astype(np.uint8)[:,:,:3]
 
-        self.draw_image(img1, "converted")
+        self.draw_image(img1, self.tab_names[1])
         time.sleep(2)
 
         print("evaluating field")
@@ -170,24 +171,21 @@ class LettuceApp(Tk):
 
         im = draw_boxes(grey2rgb(img1.copy()), boxes, color=(255, 0, 0))
         imsave(dir1 + "/" + name + "/counts.png", im)
-        self.draw_image(im, "counts")
+        self.draw_image(im, self.tab_names[2])
         time.sleep(2)
 
         print("calculating sizes")
 
         labels, size_labels = calculate_sizes(boxes, img1)
+        label_ouput= np.array([size_labels[label] for label in labels])
 
-        label_output = []
-        for label in labels:
-            label_output.append(size_labels[label])
-
-        np.save(name + "/size_labels.npy", np.array(label_output))
+        np.save(name + "/size_labels.npy", label_ouput)
 
         RGB_tuples = [[0, 0, 255], [0, 255, 0], [255, 0, 0]]
         color_field = create_for_contours(name, img1, boxes, labels, size_labels, RGB_tuples=RGB_tuples)
 
         imsave(dir1 + "/" + name + "/sizes.png", color_field)
-        self.draw_image(color_field, "sizes")
+        self.draw_image(color_field, self.tab_names[3])
         time.sleep(2)
 
         # create quadrant harvest region image.
@@ -197,10 +195,16 @@ class LettuceApp(Tk):
         im = np.array(im.getdata(), np.uint8).reshape(self.height,self.width,3)
 
         imsave(dir1 + "/" + name + "/harvest_regions.png", im)
-        self.draw_image(im, "regions")
+        self.draw_image(im, self.tab_names[4])
         time.sleep(2)
 
+        #make the csv file.
+        create_quadrant_file(dir1, name, self.img_height, self.img_width, boxes, label_ouput, 52.437348, 0.379331, rotation=31.5, region_size=230)
+
         self.pipeline_thread = None
+
+
+
 
 def main():
     lettuce_app = LettuceApp()
