@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 from skimage.draw import circle_perimeter, circle, line, polygon_perimeter, set_color
 import itertools
 from PIL import Image
+import pickle
 
 
 def extract_intensity_histograms(boxes, field):
@@ -22,8 +23,14 @@ def extract_intensity_histograms(boxes, field):
 
 def calculate_sizes(boxes, field, return_kmeans=False):
     pixel_hists = extract_intensity_histograms(boxes, field)
-    k_means = KMeans(n_clusters=3)
-    k_means.fit(pixel_hists)
+    if os.path.exists("k_means_model.pickle"):
+        k_means = pickle.load(open("k_means_model.pickle",'rb'))
+        print("Model Found")
+    else:
+        k_means = KMeans(n_clusters=3)
+        k_means.fit(pixel_hists)
+        pickle.dump(k_means,open("k_means_model.pickle",'wb'))
+        print("Saving Kmeans Model")
     indexes = label_meaning(k_means.cluster_centers_)
 
     labels = k_means.predict(pixel_hists)

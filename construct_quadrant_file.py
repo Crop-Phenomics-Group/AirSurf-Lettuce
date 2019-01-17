@@ -18,7 +18,7 @@ def calculate_new_lat_long(latitude, longitude, bearing, distance):
 
 
 #4.5cm per pxiel. about 8 pixels in a lettuce, and lettuces are about 35cms across
-def create_quadrant_file(dir1, name, h,w, boxes, labels, latitude, longitude, rotation=0.0, region_size=250, pixels_in_meters=0.045):
+def create_quadrant_file(output_dir, name, h,w, boxes, labels, latitude, longitude, rotation=0.0, region_size=250, pixels_in_meters=0.045):
     dist = pixels_in_meters * region_size / 1000.0 #convetr to kms
     regions = {}
     lat_long = {}
@@ -38,7 +38,7 @@ def create_quadrant_file(dir1, name, h,w, boxes, labels, latitude, longitude, ro
         regions[str(int(x / region_size)) + ":" + str(int(y / region_size))].append(label)
 
     #create csv file.
-    with open(dir1 + "/" + name + "_fielddata.csv", "w+") as csv_file:
+    with open(output_dir + name + "_fielddata.csv", "w+") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(["quadrant", "total_count", "small_count", "medium_count", "large_count", "size type","latitude", "longitude"])
         for nme, labs in regions.items():
@@ -52,7 +52,7 @@ def create_quadrant_file(dir1, name, h,w, boxes, labels, latitude, longitude, ro
             else:
                 counts, _ = np.histogram(np.array(labs), bins=[0,1,2,3])
                 typ = np.argmax(counts)
-                print(lati, ",", longi)
+                #print(lati, ",", longi)
 
             writer.writerow([nme, str(size), str(counts[0]), str(counts[1]), str(counts[2]), str(typ),str(lati), str(longi)])
 
@@ -69,4 +69,4 @@ if __name__ == "__main__":
 
     labels = np.load(name + "/size_labels.npy") #0 is small, 1 is medium and 2 is large.
 
-    create_quadrant_file(name, name,h,w,boxes,labels, lat, long, rotation=31.5, region_size=230)
+    create_quadrant_file(name+"/", name,h,w,boxes,labels, lat, long, rotation=31.5, region_size=230)

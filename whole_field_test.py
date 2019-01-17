@@ -39,25 +39,25 @@ def extract_region(field, model, x, y, l, box_length, stride, threshold=0.97, pr
     return box, prob
 
 
-def evaluate_whole_field(name, field, model, l=250, stride=5, prune=True):
+def evaluate_whole_field(output_dir, field, model, l=250, stride=5, prune=True):
     #run through the image cutting off 1k squres.
     box_length = 20
     h, w = field.shape[:2]
 
     ##load the main three variables.
     start = np.array([0,0])
-    if os.path.exists(name+"/loop_vars.npy"):
-        start = np.load(name+"/loop_vars.npy")
+    if os.path.exists(output_dir+"loop_vars.npy"):
+        start = np.load(output_dir+"loop_vars.npy")
 
     boxes = None
-    if os.path.exists(name+"/boxes.npy"):
-       boxes = np.load(name+"/boxes.npy")
+    if os.path.exists(output_dir+"boxes.npy"):
+       boxes = np.load(output_dir+"boxes.npy")
     else:
         boxes = np.zeros((1, 4))
 
     probs = None
-    if os.path.exists(name+"/probs.npy"):
-        probs = np.load(name+"/probs.npy")
+    if os.path.exists(output_dir+"probs.npy"):
+        probs = np.load(output_dir+"probs.npy")
     else:
         probs = np.zeros((1))
 
@@ -65,7 +65,7 @@ def evaluate_whole_field(name, field, model, l=250, stride=5, prune=True):
     for x in range(start[0], h, l-box_length):
         for y in range(start[1], w, l-box_length):
             print("%d, %d" % (x,y))
-            np.save(name+"/loop_vars.npy", np.array([x, y]))
+            np.save(output_dir+"loop_vars.npy", np.array([x, y]))
 
             box, prob = extract_region(field, model, x, y, l, box_length, stride, threshold=0.90, prune=prune)
 
@@ -74,21 +74,20 @@ def evaluate_whole_field(name, field, model, l=250, stride=5, prune=True):
                 probs = np.hstack((probs,prob))
 
             #save the values for loading.
-            np.save(name+"/boxes.npy", boxes)
-            np.save(name+"/probs.npy", probs)
+            np.save(output_dir+"boxes.npy", boxes)
+            np.save(output_dir+"probs.npy", probs)
 
         start = np.array([x, 0])
-        np.save(name+"/loop_vars.npy", start)
+        np.save(output_dir+"loop_vars.npy", start)
 
     #set the loop vars to done.
-    np.save(name + "/loop_vars.npy", np.array([h, w]))
-
+    np.save(output_dir + "loop_vars.npy", np.array([h, w]))
 
     ##prune the overlapping boxes.
     if not prune:
         boxes, probs = non_max_suppression_fast(boxes, probs, 0.18)
-        np.save(name + "/pruned_boxes.npy", boxes)
-        np.save(name + "/pruned_probs.npy", probs)
+        np.save(output_dir + "pruned_boxes.npy", boxes)
+        np.save(output_dir + "pruned_probs.npy", probs)
         print(boxes.shape)
     #imsave(name+"_lettuce_count_" + str(boxes.shape[0]) + ".png", draw_boxes(grey2rgb(field), boxes, color=(255,0,0)))
 
