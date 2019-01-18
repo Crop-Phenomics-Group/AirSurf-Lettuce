@@ -181,7 +181,7 @@ class LettuceApp(Tk):
 
 
         self.name = os.path.splitext(os.path.basename(self.filename))[0]
-        output_dir = os.path.dirname(self.filename) + "/data/" + self.name + "/"
+        output_dir = os.path.dirname(self.filename) + "/../data/" + self.name + "/"
         Image.MAX_IMAGE_PIXELS = None
         output_name =output_dir + "grey_conversion.png"
         if not os.path.exists(output_name):
@@ -204,7 +204,7 @@ class LettuceApp(Tk):
 
         print("Evaluating Field")
         keras.backend.clear_session()
-        loaded_model = load_model('./trained_model_new2.h5')
+        loaded_model = load_model('../model/trained_model_new2.h5')
         evaluate_whole_field(output_dir, img1, loaded_model)
         boxes = np.load(output_dir + "boxes.npy").astype("int")
 
