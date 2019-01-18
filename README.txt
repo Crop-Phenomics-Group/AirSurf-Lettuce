@@ -8,9 +8,9 @@ When using AirSurf-Lettuce, the graphical user interface (GUI) requires 4 pieces
 
 Latitude and Longitude should be for the top left corner of the image.
 Rotation refers to how much the image has been rotated from north, rotating clockwise.
-Filename should point to an image file in the same folder as the program, either the
-source code or the executable. If the image is not in the base folder as the program
-it may not work properly.
+Filename should point to an image file in one of the sub-folders, like model/ or testing_images/.
+If the image is not in a subfolder the program may not work properly.
+
 Even if you are not interested in GPS data across the image, you must enter values for
 Latitude, Longitude, and Rotation or it will not work. Just enter zeros.
 
