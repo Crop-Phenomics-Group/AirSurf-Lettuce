@@ -1,6 +1,6 @@
 # AirSurf-Lettuce
 
-Aaron Bostrom<sup>1</sup>, Alan Bauer<sup>1</sup>, Ji Zhou<sup>1,2*</sup>, Christopher Applegate<sup>1</sup>
+Aaron Bostrom<sup>1</sup>, Alan Bauer<sup>1</sup>, Ji Zhou<sup>1,2*</sup>
 
 <sup>1</sup>Earlham Institute, Norwich Research Park, Norwich UK  
 <sup>2</sup>University of East Anglia, Norwich Research Park, Norwich UK  
