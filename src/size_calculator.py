@@ -23,13 +23,13 @@ def extract_intensity_histograms(boxes, field):
 
 def calculate_sizes(boxes, field, return_kmeans=False):
     pixel_hists = extract_intensity_histograms(boxes, field)
-    if os.path.exists("k_means_model.pickle"):
-        k_means = pickle.load(open("k_means_model.pickle",'rb'))
+    if os.path.exists("../model/k_means_model.pickle"):
+        k_means = pickle.load(open("../model/k_means_model.pickle",'rb'))
         print("Model Found")
     else:
         k_means = KMeans(n_clusters=3)
         k_means.fit(pixel_hists)
-        pickle.dump(k_means,open("k_means_model.pickle",'wb'))
+        pickle.dump(k_means,open("../model/k_means_model.pickle",'wb'))
         print("Saving Kmeans Model")
     indexes = label_meaning(k_means.cluster_centers_)
 
