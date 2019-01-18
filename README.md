@@ -4,7 +4,7 @@ Aaron Bostrom<sup>1</sup>, Alan Bauer<sup>1</sup>, Ji Zhou<sup>1,2*</sup>, Chris
 
 <sup>1</sup>Earlham Institute, Norwich Research Park, Norwich UK  
 <sup>2</sup>University of East Anglia, Norwich Research Park, Norwich UK  
-<sup>*</sup>Correspondence: ji.zhou@earlham.ac.uk or ji.zhou@jic.ac.uk
+<sup>*</sup>Correspondence: ji.zhou@earlham.ac.uk or ji.zhou@uea.ac.uk
 
 ## Install Python, Anaconda and Libraries
 If you wish to run AirSurf-Lettuce from the code, you will need to set up python on your system. 
