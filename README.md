@@ -51,7 +51,6 @@ If you wish to run AirSurf-Lettuce from the code, you will need to set up python
     
 ## Running AirSurf-Lettuce
 
-Please see the README.txt file that is included in this repository and is also packaged with 
-the executable versions for detailed instructions on the operation of the program.
+Please see the README.txt file that is included in this repository. 
 
-We currently are working on packaging the program for macOS. The windows installer is available under the release tab.
+We currently are working on packaging the program for Windows and macOS.
