@@ -53,4 +53,7 @@ If you wish to run AirSurf-Lettuce from the code, you will need to set up python
 
 Please see the README.txt file that is included in this repository. 
 
-We currently are working on packaging the program for Windows and macOS.
+We have a Windows .exe file you can download. You can use it to analyze the sample images
+found in the repository's testing_images/ folder.
+
+We currently are working on packaging the program for macOS.
