@@ -181,19 +181,22 @@ class LettuceApp(Tk):
 
 
         self.name = os.path.splitext(os.path.basename(self.filename))[0]
+        print(os.path.splitext(os.path.basename(self.filename)))
+        print(self.filename)
         output_dir = os.path.dirname(self.filename) + "/../data/" + self.name + "/"
         Image.MAX_IMAGE_PIXELS = None
         output_name =output_dir + "grey_conversion.png"
+        print(output_name)
         if not os.path.exists(output_name):
             self.src_image = grey2rgb(self.src_image)
             img1 = fix_noise_vetcorised(self.src_image)
 
             # create dir.
-            if not os.path.exists("data"):
-                os.mkdir("data")
+            if not os.path.exists("../data"):
+                os.mkdir("../data")
 
-            if not os.path.exists("data/" + self.name):
-                os.mkdir("data/" + self.name)
+            if not os.path.exists("../data/" + self.name):
+                os.mkdir("../data/" + self.name)
 
             imsave(output_name, img1)
         else:
