@@ -65,6 +65,11 @@ def evaluate_whole_field(output_dir, field, model, l=250, stride=5, prune=True):
     for x in range(start[0], h, l-box_length):
         for y in range(start[1], w, l-box_length):
             print("%d, %d" % (x,y))
+
+            # Prevent doing all this work for all black squares
+            if np.max(field[x:x+l,y:y+l]) == 0:
+                continue
+
             np.save(output_dir+"loop_vars.npy", np.array([x, y]))
 
             box, prob = extract_region(field, model, x, y, l, box_length, stride, threshold=0.90, prune=prune)
