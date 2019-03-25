@@ -3,13 +3,21 @@ proceed to identify each lettuce in the field and classify them into three size 
 
 *****     RUNNING AIRSURF-LETTUCE     *****
 
-When using AirSurf-Lettuce, the graphical user interface (GUI) requires 4 pieces of input:
-    Latitude, Longitude, Rotation and Filename
+When using AirSurf-Lettuce, the graphical user interface (GUI) requires 5 pieces of input:
+    Latitude, Longitude, Rotation, a Bad NDVI Image checkbox, and Filename
 
 Latitude and Longitude should be for the top left corner of the image.
 Rotation refers to how much the image has been rotated from north, rotating clockwise.
+The checkbox determines whether our preprocessing will be performed on the image.
+This should be used if you have images where the brightest parts of the lettuces
+have actually overflowed and appear as the darkest part of the image. See our sample
+images for examples.
 Filename should point to an image file in one of the sub-folders, like model/ or testing_images/.
 If the image is not in a subfolder the program may not work properly.
+
+For using your own images, it is important that your lettuces appear as approximately
+the same size as those that we were using. You should resize your input image so that
+each lettuce head is approximately 10-12 pixels across.
 
 Even if you are not interested in GPS data across the image, you must enter values for
 Latitude, Longitude, and Rotation or it will not work. Just enter zeros.
@@ -48,6 +56,3 @@ and the export of a spreadsheet of the data for each region with GPS tags:
 The harvest regions are identified by the function create_quadrant_image() in the file contours_test.py. These
 data are then passed to create_quadrant_file() in the file construct_quadrant_file.py, which calculates the GPS
 coordinates for each subregion in the field.
-
-
-
