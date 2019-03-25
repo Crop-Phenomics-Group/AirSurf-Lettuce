@@ -1,5 +1,5 @@
 import tkinter
-from tkinter import Menu, Tk, Canvas, Entry, Button, filedialog, Label, Frame, ttk
+from tkinter import Menu, Tk, Canvas, Entry, Button, filedialog, Label, Frame, ttk, Checkbutton, BooleanVar
 from PIL import ImageTk, Image
 from skimage.io import imread, imsave, imshow, show
 from skimage.color import grey2rgb
@@ -41,11 +41,11 @@ class LettuceApp(Tk):
 
         #52.437348, 0.379331, rotation=31.5
         self.in_long_label = Label(master=self.input_frame, text="Longitude:")
-        self.in_long_entry = Entry(master=self.input_frame, text="52.437348")
+        self.in_long_entry = Entry(master=self.input_frame, text="52.437348", width=10)
         self.in_lat_label = Label(master=self.input_frame, text="Latitude:")
-        self.in_lat_entry = Entry(master=self.input_frame, text="0.379331")
+        self.in_lat_entry = Entry(master=self.input_frame, text="0.379331", width=10)
         self.in_rot_label = Label(master=self.input_frame, text="Rotation:")
-        self.in_rot_entry = Entry(master=self.input_frame, text="31.5")
+        self.in_rot_entry = Entry(master=self.input_frame, text="31.5", width=5)
 
         self.in_long_label.pack(side=tkinter.LEFT)
         self.in_long_entry.pack(side=tkinter.LEFT)
@@ -54,7 +54,10 @@ class LettuceApp(Tk):
         self.in_rot_label.pack(side=tkinter.LEFT)
         self.in_rot_entry.pack(side=tkinter.LEFT)
 
-
+        # Checkbox code
+        self.overflow = BooleanVar()
+        self.in_ndvi_check = Checkbutton(master=self.input_frame,text="Bad NDVI Image", onvalue=True, offvalue=False, variable=self.overflow)
+        self.in_ndvi_check.pack(side=tkinter.LEFT)
 
         self.in_filename_label = Label(master=self.input_frame, text="Input:")
         self.in_filename_entry = Entry(master=self.input_frame, textvariable="Input FileName")
@@ -179,6 +182,7 @@ class LettuceApp(Tk):
         long = float(self.in_long_entry.get())
         rot = float(self.in_rot_entry.get())
 
+        #print(self.overflow.get())
 
         self.name = os.path.splitext(os.path.basename(self.filename))[0]
         print(os.path.splitext(os.path.basename(self.filename)))
@@ -189,7 +193,10 @@ class LettuceApp(Tk):
         print(output_name)
         if not os.path.exists(output_name):
             self.src_image = grey2rgb(self.src_image)
-            img1 = fix_noise_vetcorised(self.src_image)
+            if self.overflow.get():
+                img1 = fix_noise_vetcorised(self.src_image)
+            else:
+                img1 = self.src_image
 
             # create dir.
             if not os.path.exists("../data"):
