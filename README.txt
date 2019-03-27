@@ -17,7 +17,8 @@ If the image is not in a subfolder the program may not work properly.
 
 For using your own images, it is important that your lettuces appear as approximately
 the same size as those that we were using. You should resize your input image so that
-each lettuce head is approximately 10-12 pixels across.
+each lettuce head is approximately 10-12 pixels across. Also, having a border of around 15 pixels
+around the edge of the field to be analyzed will improve results.
 
 Even if you are not interested in GPS data across the image, you must enter values for
 Latitude, Longitude, and Rotation or it will not work. Just enter zeros.
