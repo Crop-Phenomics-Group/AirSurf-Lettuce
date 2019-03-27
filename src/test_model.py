@@ -103,6 +103,9 @@ def sliding_window_count_vectorised(img, model, length=20, stride=3, probability
     lettuce_count = 0
     boxes = []
     probs = []
+    if min(img.shape) < length:
+        return np.array(boxes), np.array(probs)
+
     im4D = view_as_windows(img, (length,length,1), step=(stride,stride,1))
     im3d = im4D.reshape(-1,length,length,1)
     #from a given index, we should be able to convert it back into a 2d co-ord.
