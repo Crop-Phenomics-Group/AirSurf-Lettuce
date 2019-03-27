@@ -21,7 +21,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] ='True' # This prevents a crash from improper
 from zipfile import ZipFile
 import _thread
 from tkinter import messagebox
-
+from shutil import copy2
 class LettuceApp(Tk):
 
 
@@ -191,12 +191,21 @@ class LettuceApp(Tk):
         Image.MAX_IMAGE_PIXELS = None
         output_name =output_dir + "grey_conversion.png"
         print(output_name)
+
+        # If the box is not checked, this will run and copy the file to the new location
+        if not self.overflow.get():
+            if not os.path.exists(output_name):
+                if not os.path.exists("../data"):
+                    os.mkdir("../data")
+
+                if not os.path.exists("../data/" + self.name):
+                    os.mkdir("../data/" + self.name)
+
+                copy2(self.filename, output_name)
+
         if not os.path.exists(output_name):
             self.src_image = grey2rgb(self.src_image)
-            if self.overflow.get():
-                img1 = fix_noise_vetcorised(self.src_image)
-            else:
-                img1 = self.src_image
+            img1 = fix_noise_vetcorised(self.src_image)
 
             # create dir.
             if not os.path.exists("../data"):
