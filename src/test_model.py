@@ -103,7 +103,7 @@ def sliding_window_count_vectorised(img, model, length=20, stride=3, probability
     lettuce_count = 0
     boxes = []
     probs = []
-    if min(img.shape) < length:
+    if min(img.shape[:2]) < length:
         return np.array(boxes), np.array(probs)
 
     im4D = view_as_windows(img, (length,length,1), step=(stride,stride,1))
