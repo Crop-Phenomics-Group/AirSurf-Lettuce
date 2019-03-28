@@ -1,5 +1,5 @@
 import tkinter
-from tkinter import Menu, Tk, Canvas, Entry, Button, filedialog, Label, Frame, ttk, Checkbutton, BooleanVar
+from tkinter import Menu, Tk, Canvas, Entry, Button, filedialog, Label, Frame, ttk, Checkbutton, BooleanVar, RIDGE, BOTH, YES, font
 from PIL import ImageTk, Image
 from skimage.io import imread, imsave, imshow, show
 from skimage.color import grey2rgb
@@ -39,38 +39,78 @@ class LettuceApp(Tk):
         self.input_frame = Frame(master=self)
         self.input_frame.config(width=self.width, height=30)
 
+        self.file_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
+        self.file_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
+
+        self.gps_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
+        self.gps_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
+
+        self.gps_label = Label(master=self.gps_frame, text="2. GPS", font=(font.BOLD, 20))
+        self.gps_label.pack(side=tkinter.LEFT)
+
+        self.gps_lat_frame = Frame(master=self.gps_frame)
+        self.gps_lat_frame.pack(side=tkinter.TOP)
+
+        self.gps_long_frame = Frame(master=self.gps_frame)
+        self.gps_long_frame.pack(side=tkinter.TOP)
+
+        self.config_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
+        self.config_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
+
+        self.config_label = Label(master=self.config_frame, text="3. Configuration", font=(font.BOLD, 20))
+        self.config_label.pack(side=tkinter.LEFT)
+
+        self.config_rot_frame = Frame(master=self.config_frame)
+        self.config_rot_frame.pack(side=tkinter.TOP)
+
+        self.config_preproc_frame = Frame(master=self.config_frame)
+        self.config_preproc_frame.pack(side=tkinter.TOP)
+
+        self.start_button_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, pady=15)
+        self.start_button_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
+
+
         #52.437348, 0.379331, rotation=31.5
-        self.in_long_label = Label(master=self.input_frame, text="Longitude:")
-        self.in_long_entry = Entry(master=self.input_frame, text="52.437348", width=10)
-        self.in_lat_label = Label(master=self.input_frame, text="Latitude:")
-        self.in_lat_entry = Entry(master=self.input_frame, text="0.379331", width=10)
-        self.in_rot_label = Label(master=self.input_frame, text="Rotation:")
-        self.in_rot_entry = Entry(master=self.input_frame, text="31.5", width=5)
+        self.in_long_label = Label(master=self.gps_long_frame, text="Longitude:")
+        self.in_long_entry = Entry(master=self.gps_long_frame, text="52.437348", width=10)
+        self.in_lat_label = Label(master=self.gps_lat_frame, text="Latitude:")
+        self.in_lat_entry = Entry(master=self.gps_lat_frame, text="0.379331", width=10)
+
+        self.in_rot_label = Label(master=self.config_rot_frame, text="Rotation:")
+        self.in_rot_entry = Entry(master=self.config_rot_frame, text="31.5", width=5)
 
         self.in_long_label.pack(side=tkinter.LEFT)
-        self.in_long_entry.pack(side=tkinter.LEFT)
+        self.in_long_entry.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
         self.in_lat_label.pack(side=tkinter.LEFT)
-        self.in_lat_entry.pack(side=tkinter.LEFT)
+        self.in_lat_entry.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
+
         self.in_rot_label.pack(side=tkinter.LEFT)
         self.in_rot_entry.pack(side=tkinter.LEFT)
 
         # Checkbox code
         self.overflow = BooleanVar()
-        self.in_ndvi_check = Checkbutton(master=self.input_frame,text="Bad NDVI Image", onvalue=True, offvalue=False, variable=self.overflow)
+        self.ndvi_check_label = Label(master=self.config_preproc_frame, text="Overflown NDVI")
+        self.ndvi_check_label.pack(side=tkinter.LEFT)
+        self.in_ndvi_check = Checkbutton(master=self.config_preproc_frame, onvalue=True, offvalue=False, variable=self.overflow)
         self.in_ndvi_check.pack(side=tkinter.LEFT)
 
-        self.in_filename_label = Label(master=self.input_frame, text="Input:")
-        self.in_filename_entry = Entry(master=self.input_frame, textvariable="Input FileName")
-        self.in_filename_browse = Button(master=self.input_frame, text="...", width=3, command=self.open_image)
+        self.in_filename_label = Label(master=self.file_frame, text="1. Load Image:", font=(font.BOLD, 20))
+        self.in_filename_entry = Entry(master=self.file_frame, textvariable="Input FileName", width=10)
+        self.in_filename_browse = Button(master=self.file_frame, text="...", width=3, command=self.open_image)
         #self.in_filename_submit = Button(master=self.input_frame, text="Submit", width=10, command=self.load_image)
-        self.in_filename_start = Button(master=self.input_frame, text="Start", width=10, command=self.run_pipeline_threaded)
+
+        self.in_filename_start = Button(master=self.start_button_frame, text="4. START", width=10, font=(font.BOLD, 20), command=self.run_pipeline_threaded)
         self.in_filename_label.pack(side=tkinter.LEFT)
         self.in_filename_entry.pack(side=tkinter.LEFT)
         self.in_filename_browse.pack(side=tkinter.LEFT)
         #self.in_filename_submit.pack(side=tkinter.LEFT)
-        self.in_filename_start.pack(side=tkinter.LEFT)
+        self.in_filename_start.pack()
 
-        self.input_frame.pack()
+        self.input_frame.pack(fill=BOTH, expand=YES)
+        self.file_frame.pack()
+        self.gps_frame.pack()
+        self.config_frame.pack()
+
 
 
 
