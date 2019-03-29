@@ -20,4 +20,5 @@ setup.py
 sample_region*.csv
 test.png
 whole_field.png
-
+data/*
+testing_images/*
