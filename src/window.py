@@ -8,7 +8,6 @@ import keras
 from keras.models import load_model
 from whole_field_test import evaluate_whole_field, draw_boxes
 import numpy as np
-from PIL import Image
 from create_individual_lettuce_train_data import fix_noise_vetcorised
 from contours_test import create_quadrant_image
 from size_calculator import calculate_sizes, create_for_contours
@@ -35,6 +34,7 @@ class LettuceApp(Tk):
         self.img_height =0
         self.geometry(str(self.width)+"x"+str(self.height))
         self.title("AirSurf-Lettuce")
+        self.info_image = ImageTk.PhotoImage(Image.fromarray(imread("info_icon.png")))
 
         self.input_frame = Frame(master=self)
         self.input_frame.config(width=self.width, height=30)
@@ -42,7 +42,7 @@ class LettuceApp(Tk):
         self.file_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
         self.file_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
 
-        self.gps_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
+        self.gps_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15, pady=2)
         self.gps_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
 
         self.gps_label = Label(master=self.gps_frame, text="2. GPS", font=(font.BOLD, 20))
@@ -54,7 +54,7 @@ class LettuceApp(Tk):
         self.gps_long_frame = Frame(master=self.gps_frame)
         self.gps_long_frame.pack(side=tkinter.TOP)
 
-        self.config_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15)
+        self.config_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, padx=15, pady=2)
         self.config_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
 
         self.config_label = Label(master=self.config_frame, text="3. Configuration", font=(font.BOLD, 20))
@@ -63,8 +63,15 @@ class LettuceApp(Tk):
         self.config_rot_frame = Frame(master=self.config_frame)
         self.config_rot_frame.pack(side=tkinter.TOP)
 
+        self.config_rot_info = Button(master=self.config_rot_frame, command=self.rot_info, image=self.info_image, bd=0)
+        #self.config_rot_info.config(image=self.info_image)
+        self.config_rot_info.pack(side=tkinter.RIGHT)
+
         self.config_preproc_frame = Frame(master=self.config_frame)
         self.config_preproc_frame.pack(side=tkinter.TOP)
+
+        self.config_preproc_info = Button(master=self.config_preproc_frame, command=self.overflown_info, image=self.info_image, bd=0)
+        self.config_preproc_info.pack(side=tkinter.RIGHT)
 
         self.start_button_frame = Frame(master=self.input_frame, borderwidth=2, relief=RIDGE, pady=15)
         self.start_button_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
@@ -155,6 +162,12 @@ class LettuceApp(Tk):
         self.out_filename_browse.pack(side=tkinter.LEFT)
         self.out_filename_save.pack(side=tkinter.LEFT)
         self.output_frame.pack()
+
+    def rot_info(self):
+        messagebox.showinfo("Rotation Information","The value you enter for rotation should be the value in degrees that your image is rotated counter-clockwise from north. If you had an arrow pointing north on the image, put the angle between the positive y-axis and the arrow, going counter-clockwise.")
+
+    def overflown_info(self):
+        messagebox.showinfo("Overflown NDVI Infomation", "Check this box if your NDVI image was processed in such a way that the bright areas have overflown and appear dark.")
 
     def file_dialog(self):
         filename = filedialog.askdirectory(initialdir="./")
