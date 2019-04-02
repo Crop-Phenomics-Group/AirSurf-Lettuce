@@ -118,6 +118,18 @@ class LettuceApp(Tk):
         self.gps_frame.pack()
         self.config_frame.pack()
 
+        self.output_frame = Frame(master=self.input_frame, pady=2, borderwidth=2, relief=RIDGE)
+        self.output_frame.config(width=self.width, height=self.height-30)
+
+        self.out_filename_label = Label(master=self.output_frame, text="Output:")
+        self.out_filename_entry = Entry(master=self.output_frame, textvariable="Output FileName")
+        self.out_filename_browse = Button(master=self.output_frame, text="...", width=3, command=self.file_dialog)
+        self.out_filename_save = Button(master=self.output_frame, text="Save", width=3, command=self.thread_save_output)
+        self.out_filename_label.pack(side=tkinter.LEFT)
+        self.out_filename_entry.pack(side=tkinter.LEFT)
+        self.out_filename_browse.pack(side=tkinter.LEFT)
+        self.out_filename_save.pack(side=tkinter.LEFT)
+        self.output_frame.pack(side=tkinter.LEFT, fill=BOTH, expand=YES)
 
 
 
@@ -150,18 +162,6 @@ class LettuceApp(Tk):
         self.name = None
 
 
-        self.output_frame = Frame(master=self)
-        self.output_frame.config(width=self.width, height=self.height-30)
-
-        self.out_filename_label = Label(master=self.output_frame, text="Ouput:")
-        self.out_filename_entry = Entry(master=self.output_frame, textvariable="Output FileName")
-        self.out_filename_browse = Button(master=self.output_frame, text="...", width=3, command=self.file_dialog)
-        self.out_filename_save = Button(master=self.output_frame, text="Save", width=3, command=self.thread_save_output)
-        self.out_filename_label.pack(side=tkinter.LEFT)
-        self.out_filename_entry.pack(side=tkinter.LEFT)
-        self.out_filename_browse.pack(side=tkinter.LEFT)
-        self.out_filename_save.pack(side=tkinter.LEFT)
-        self.output_frame.pack()
 
     def rot_info(self):
         messagebox.showinfo("Rotation Information","The value you enter for rotation should be the value in degrees that your image is rotated counter-clockwise from north. If you had an arrow pointing north on the image, put the angle between the positive y-axis and the arrow, going counter-clockwise.")
@@ -180,7 +180,7 @@ class LettuceApp(Tk):
 
     def save_output(self):
         zipf = ZipFile(self.out_filename_entry.get()+"/"+self.name+'.zip', 'w')
-        for root, dirs, files in os.walk("./data/"+self.name):
+        for root, dirs, files in os.walk("../data/"+self.name):
             for file in files:
                 zipf.write(os.path.join(root, file))
         zipf.close()
