@@ -1,10 +1,12 @@
 # AirSurf-Lettuce
 
-Aaron Bostrom<sup>1</sup>, Alan Bauer<sup>1</sup>, Ji Zhou<sup>1,2*</sup>
+Aaron Bostrom<sup>1</sup>, Alan Bauer<sup>1</sup>, Ji Zhou<sup>2,3*</sup>
 
 <sup>1</sup>Earlham Institute, Norwich Research Park, Norwich UK  
-<sup>2</sup>University of East Anglia, Norwich Research Park, Norwich UK  
-<sup>*</sup>Correspondence: ji.zhou@earlham.ac.uk or ji.zhou@uea.ac.uk
+<sup>2</sup>Cambridge Crop Research, National Institute of Agricultural Botany, Cambridge UK 
+<sup>3</sup>University of East Anglia, Norwich Research Park, Norwich UK  
+
+<sup>*</sup>Correspondence:  ji.zhou@NIAB.com; Ji.Zhou@NJAU.edu.cn
 
 ## Install Python, Anaconda and Libraries
 If you wish to run AirSurf-Lettuce from the code, you will need to set up python on your system. 
